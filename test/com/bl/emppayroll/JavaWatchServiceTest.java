@@ -7,8 +7,6 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 
-import com.bl.emppayroll.JavaWatchService;
-
 public class JavaWatchServiceTest {
 
 	@Test

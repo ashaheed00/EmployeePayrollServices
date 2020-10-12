@@ -31,4 +31,11 @@ public class EmployeePayrollFileIOService {
 		return countOfEntries;
 	}
 
+	public void printEmployeePayrolls() {
+		try {
+			Files.lines(Paths.get(PAYROLL_FILE)).forEach(System.out::println);
+		} catch (IOException e) {
+		}
+	}
+
 }

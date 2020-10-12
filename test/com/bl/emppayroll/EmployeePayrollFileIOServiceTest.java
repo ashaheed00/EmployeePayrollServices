@@ -14,5 +14,6 @@ public class EmployeePayrollFileIOServiceTest {
 		EmployeePayrollFileIOService payrollServiceObject = new EmployeePayrollFileIOService();
 		payrollServiceObject.writeData(Arrays.asList(arrayOfEmployees));
 		Assert.assertEquals(3, payrollServiceObject.countEntries());
+		payrollServiceObject.printEmployeePayrolls();
 	}
 }

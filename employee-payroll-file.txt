@@ -1,0 +1,3 @@
+EmployeePayroll [id=1, name=Aditya Verma, salary=800000.0]
+EmployeePayroll [id=2, name=Akhil Singh, salary=850000.0]
+EmployeePayroll [id=3, name=Anamika Bhatt, salary=900000.0]

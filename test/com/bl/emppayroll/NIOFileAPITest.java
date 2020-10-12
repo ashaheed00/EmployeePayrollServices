@@ -1,4 +1,4 @@
-package com.bol.emppayroll;
+package com.bl.emppayroll;
 
 import static org.junit.Assert.assertTrue;
 
@@ -8,16 +8,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.IntStream;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.bl.emppayroll.JavaWatchService;
-
 public class NIOFileAPITest {
-	private static final String HOME = System.getProperty("user.home");
-	private static final String PLAY_WITH_NIO = "TempPlayGround";
+	static final String HOME = System.getProperty("user.home");
+	static final String PLAY_WITH_NIO = "TempPlayGround";
 
-	@Ignore
 	@Test
 	public void givenPathWhenCheckedThenConfirm() throws IOException {
 		// Check File Exists
@@ -51,12 +47,4 @@ public class NIOFileAPITest {
 				.forEach(System.out::println);
 
 	}
-
-	@Test
-	public void givenADirectoryWhenWatchedListsAllTheActivities() throws IOException {
-		Path dir = Paths.get(HOME + "\\" + PLAY_WITH_NIO);
-		Files.list(dir).filter(Files::isRegularFile).forEach(System.out::println);
-		new JavaWatchService(dir).processEvents();
-	}
-
 }

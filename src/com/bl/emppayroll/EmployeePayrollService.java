@@ -3,6 +3,7 @@ package com.bl.emppayroll;
 import java.util.*;
 
 public class EmployeePayrollService {
+
 	public enum IOService {
 		CONSOLE_IO, FILE_IO, DB_IO, REST_IO
 	}
@@ -26,7 +27,7 @@ public class EmployeePayrollService {
 		employeePayrollList.add(new EmployeePayrollData(id, name, salary));
 	}
 
-	private void writeEmployeePayrollData(Scanner consoleInputReader) {
+	void writeEmployeePayrollData(IOService inputReader) {
 		System.out.println("\nWriting Employee Payroll Data to Console\n" + employeePayrollList);
 	}
 
@@ -35,7 +36,7 @@ public class EmployeePayrollService {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService(employeePayrollList);
 		Scanner consoleInputReader = new Scanner(System.in);
 		employeePayrollService.readEmployeePayrollData(consoleInputReader);
-		employeePayrollService.writeEmployeePayrollData(consoleInputReader);
+		employeePayrollService.writeEmployeePayrollData(IOService.CONSOLE_IO);
 
 	}
 

@@ -9,11 +9,14 @@ public class EmployeePayrollService {
 	}
 
 	private List<EmployeePayrollData> employeePayrollList;
+	private EmployeePayrollDBService employeePayrollDBService;
 
 	public EmployeePayrollService() {
+		employeePayrollDBService = EmployeePayrollDBService.getInstance();
 	}
 
 	public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
+		this();
 		this.employeePayrollList = employeePayrollList;
 	}
 
@@ -35,8 +38,26 @@ public class EmployeePayrollService {
 		if (ioService.equals(IOService.FILE_IO))
 			employeePayrollList = new EmployeePayrollFileIOService().readData();
 		if (ioService.equals(IOService.DB_IO))
-			employeePayrollList = new EmployeePayrollDBService().readData();
+			employeePayrollList = employeePayrollDBService.readData();
 		return employeePayrollList;
 	}
 
+	public void updateEmployeeSalary(String name, Double salary) {
+		int result = employeePayrollDBService.updateSalaryUsingSQL(name, salary);
+		EmployeePayrollData employeePayrollData = getEmployeePayrollData(name);
+		if (result != 0 && employeePayrollData != null)
+			employeePayrollData.setSalary(salary);
+	}
+
+	public boolean isEmpPayrollSyncedWithDB(String name) {
+		try {
+			return employeePayrollDBService.getEmployeePayrollDatas(name).get(0).equals(getEmployeePayrollData(name));
+		} catch (IndexOutOfBoundsException e) {
+		}
+		return false;
+	}
+
+	private EmployeePayrollData getEmployeePayrollData(String name) {
+		return employeePayrollList.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
+	}
 }

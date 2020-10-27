@@ -1,3 +1,3 @@
 # Employee Payroll Service BridgeLabz
-## Version JDBC UC2
-#### JDBC_UC2_RetrieveEmpPayrollFromDB 
+## Version JDBC UC3
+#### JDBC_UC3_UpdateDB_AndSync 

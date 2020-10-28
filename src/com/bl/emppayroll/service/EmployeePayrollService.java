@@ -94,6 +94,7 @@ public class EmployeePayrollService {
 			throw new EmployeePayrollException("No data found", ExceptionType.NO_DATA_FOUND);
 	}
 
+	@Deprecated
 	public void addEmployeePayrollData(String name, Double salary, String startDate, String gender)
 			throws EmployeePayrollException {
 		int result = employeePayrollDBService.insertNewEmployeeToDB(name, salary, startDate, gender);
@@ -118,7 +119,9 @@ public class EmployeePayrollService {
 
 	public boolean isEmpPayrollSyncedWithDB(String name) throws EmployeePayrollException {
 		try {
-			return employeePayrollDBService.getEmployeePayrollDatas(name).get(0).equals(getEmployeePayrollData(name));
+			EmployeePayrollData emp = getEmployeePayrollData(name);
+			return employeePayrollDBService.getEmployeePayrollDatas(name).get(0).getId() == emp.getId()
+					&& employeePayrollDBService.getEmployeePayrollDatas(name).get(0).getName().equals(emp.getName());
 		} catch (IndexOutOfBoundsException e) {
 			throw new EmployeePayrollException("No data found with that name", ExceptionType.NO_DATA_FOUND);
 		}

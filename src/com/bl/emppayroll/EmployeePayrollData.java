@@ -103,11 +103,6 @@ public class EmployeePayrollData {
 		EmployeePayrollData other = (EmployeePayrollData) obj;
 		if (companyId != other.companyId)
 			return false;
-		if (departmentName == null) {
-			if (other.departmentName != null)
-				return false;
-		} else if (!departmentName.equals(other.departmentName))
-			return false;
 		if (gender != other.gender)
 			return false;
 		if (id != other.id)

@@ -106,6 +106,7 @@ public class EmployeePayrollJDBCTest {
 		assertTrue(isSynced);
 	}
 
+	
 	@Test
 	public void givenNewEmployee_WhenAddedUsingER_ShouldSyncWithDB() throws EmployeePayrollException {
 		empPayRollService.readEmployeePayrollData(IOService.DB_IO);

@@ -31,7 +31,7 @@ public class EmployeePayrollDBService {
 	}
 
 	public List<EmployeePayrollData> readData() {
-		String sql = String.format("select * from employee_payroll");
+		String sql = String.format("select * from employee_payroll where active=true");
 		return getEmployeePayrollList(sql);
 	}
 
@@ -71,7 +71,7 @@ public class EmployeePayrollDBService {
 	private void prepareStatementForEmployeeData() {
 		try {
 			Connection connection = getConnection();
-			String sql = "SELECT * FROM employee_payroll WHERE name = ?;";
+			String sql = "SELECT * FROM employee_payroll WHERE name = ? and active=true;";
 			empPreparedStatement = connection.prepareStatement(sql);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,7 +149,7 @@ public class EmployeePayrollDBService {
 		try (Statement statement = connection.createStatement()) {
 			String sql = String.format(
 					"INSERT INTO employee_payroll (name, basic_pay, start_date, gender,company_id) VALUES ('%s','%s','%s','%s','%s');",
-					name, salary, startDate, gender,companyId);
+					name, salary, startDate, gender, companyId);
 			int rowAffected = statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			if (rowAffected == 1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
@@ -220,5 +220,15 @@ public class EmployeePayrollDBService {
 				}
 		}
 		return employeePayrollData;
+	}
+
+	public void removeEmployeeFromDB(int empId) throws EmployeePayrollException {
+		String sql = String.format("UPDATE employee_payroll SET active = false WHERE id = '%s'", empId);
+		try (Connection connection = getConnection()) {
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new EmployeePayrollException("Wrong SQL or field given", ExceptionType.WRONG_SQL);
+		}
 	}
 }

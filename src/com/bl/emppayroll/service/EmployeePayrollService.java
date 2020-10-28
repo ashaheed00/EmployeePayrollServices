@@ -127,6 +127,14 @@ public class EmployeePayrollService {
 		}
 	}
 
+	public void removeEmployee(int empId) {
+		try {
+			employeePayrollDBService.removeEmployeeFromDB(empId);
+		} catch (EmployeePayrollException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private EmployeePayrollData getEmployeePayrollData(String name) {
 		return employeePayrollList.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
 	}

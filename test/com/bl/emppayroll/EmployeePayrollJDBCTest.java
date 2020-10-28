@@ -101,12 +101,13 @@ public class EmployeePayrollJDBCTest {
 	@Test
 	public void givenNewEmployee_WhenAddedInTwoTables_ShouldSyncWithDB() throws EmployeePayrollException {
 		empPayRollService.readEmployeePayrollData(IOService.DB_IO);
-		//empPayRollService.addEmployeeAndPayrollData("Mark", 2000000.00, "2016-02-01", "M");
+		// empPayRollService.addEmployeeAndPayrollData("Mark", 2000000.00, "2016-02-01",
+		// "M");
 		boolean isSynced = empPayRollService.isEmpPayrollSyncedWithDB("Mark");
 		assertTrue(isSynced);
 	}
 
-	
+	@Ignore
 	@Test
 	public void givenNewEmployee_WhenAddedUsingER_ShouldSyncWithDB() throws EmployeePayrollException {
 		empPayRollService.readEmployeePayrollData(IOService.DB_IO);
@@ -116,6 +117,12 @@ public class EmployeePayrollJDBCTest {
 		empPayRollService.addEmployeeAndPayrollData("Mark", 2000000.00, "2016-02-01", "M", 501, depts);
 		boolean isSynced = empPayRollService.isEmpPayrollSyncedWithDB("Mark");
 		assertTrue(isSynced);
+	}
+
+	@Test
+	public void givenEmployeeId_WhenDeletedUsing_ShouldSyncWithDB() throws EmployeePayrollException {
+		empPayRollService.removeEmployee(5);
+		assertEquals(5, empPayrollList.size());
 	}
 
 }

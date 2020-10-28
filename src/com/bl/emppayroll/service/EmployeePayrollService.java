@@ -1,5 +1,9 @@
 package com.bl.emppayroll.service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import com.bl.emppayroll.EmployeePayrollData;
@@ -49,6 +53,22 @@ public class EmployeePayrollService {
 	public List<EmployeePayrollData> getEmpPayrollDataForDateRange(LocalDate startDate, LocalDate endDate)
 			throws EmployeePayrollException {
 		return employeePayrollDBService.getEmployeesForDateRange(startDate, endDate);
+	}
+
+	public Map<String, Double> getSumOfDataGroupedByGender(IOService ioService, String column)
+			throws EmployeePayrollException {
+		if (ioService == IOService.DB_IO)
+			return employeePayrollDBService.getEmpDataGroupedByGender(column, "SUM");
+		else
+			throw new EmployeePayrollException("Wrong IO type", ExceptionType.WRONG_IO_TYPE);
+	}
+	
+	public Map<String, Double> getAvgOfDataGroupedByGender(IOService ioService, String column)
+			throws EmployeePayrollException {
+		if (ioService == IOService.DB_IO)
+			return employeePayrollDBService.getEmpDataGroupedByGender(column, "AVG");
+		else
+			throw new EmployeePayrollException("Wrong IO type", ExceptionType.WRONG_IO_TYPE);
 	}
 
 	public void updateEmployeeSalary(String name, Double salary) throws EmployeePayrollException {

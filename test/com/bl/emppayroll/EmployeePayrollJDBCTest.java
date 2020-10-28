@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import com.bl.emppayroll.service.EmployeePayrollService.IOService;
 public class EmployeePayrollJDBCTest {
 	EmployeePayrollService empPayRollService;
 	List<EmployeePayrollData> empPayrollList;
+	Map<String, Double> empPayrollDataByGenderMap;
 
 	@Before
 	public void initialize() {
@@ -49,6 +51,20 @@ public class EmployeePayrollJDBCTest {
 		LocalDate enDate = LocalDate.now();
 		empPayrollList = empPayRollService.getEmpPayrollDataForDateRange(startDate, enDate);
 		assertEquals(4, empPayrollList.size());
+	}
+
+	@Test
+	public void givenEmployeeDB_WhenRetrievedSum_ShouldReturnSumByGender() throws EmployeePayrollException {
+		empPayrollDataByGenderMap = empPayRollService.getSumOfDataGroupedByGender(IOService.DB_IO, "basic_pay");
+		assertEquals(4000000, empPayrollDataByGenderMap.get("M"), 0.0);
+		assertEquals(7800000, empPayrollDataByGenderMap.get("F"), 0.0);
+	}
+	
+	@Test
+	public void givenEmployeeDB_WhenRetrievedAvg_ShouldReturnSumByGender() throws EmployeePayrollException {
+		empPayrollDataByGenderMap = empPayRollService.getAvgOfDataGroupedByGender(IOService.DB_IO, "basic_pay");
+		assertEquals(2000000, empPayrollDataByGenderMap.get("M"), 0.0);
+		assertEquals(2600000, empPayrollDataByGenderMap.get("F"), 0.0);
 	}
 
 }

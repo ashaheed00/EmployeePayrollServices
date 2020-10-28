@@ -9,6 +9,7 @@ public class EmployeePayrollData {
 	private String name;
 	private double salary;
 	private LocalDate startDate;
+	private char gender;
 
 	public EmployeePayrollData() {
 	}
@@ -80,6 +81,14 @@ public class EmployeePayrollData {
 
 	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
+	}
+
+	public char getGender() {
+		return gender;
+	}
+
+	public void setGender(char gender) {
+		this.gender = gender;
 	}
 
 	@Override

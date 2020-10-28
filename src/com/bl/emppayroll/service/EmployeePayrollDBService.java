@@ -71,7 +71,7 @@ public class EmployeePayrollDBService {
 	private void prepareStatementForEmployeeData() {
 		try {
 			Connection connection = getConnection();
-			String sql = "SELECT * FROM employee_payroll WHERE name = ?";
+			String sql = "SELECT * FROM employee_payroll WHERE name = ?;";
 			empPreparedStatement = connection.prepareStatement(sql);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,5 +104,20 @@ public class EmployeePayrollDBService {
 			e.printStackTrace();
 		}
 		return employeePayrollList;
+	}
+
+	public Map<String, Double> getEmpDataGroupedByGender(String column, String operation) {
+		Map<String, Double> dataByGenderMap = new HashMap<>();
+		String sql = String.format("SELECT gender, %s(%s) FROM employee_payroll GROUP BY gender;", operation, column);
+		try (Connection connection = getConnection()) {
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				dataByGenderMap.put(resultSet.getString(1), resultSet.getDouble(2));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return dataByGenderMap;
 	}
 }

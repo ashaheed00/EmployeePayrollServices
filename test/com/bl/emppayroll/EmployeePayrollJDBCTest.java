@@ -61,10 +61,24 @@ public class EmployeePayrollJDBCTest {
 	}
 	
 	@Test
-	public void givenEmployeeDB_WhenRetrievedAvg_ShouldReturnSumByGender() throws EmployeePayrollException {
+	public void givenEmployeeDB_WhenRetrievedAvg_ShouldReturnAvgByGender() throws EmployeePayrollException {
 		empPayrollDataByGenderMap = empPayRollService.getAvgOfDataGroupedByGender(IOService.DB_IO, "basic_pay");
 		assertEquals(2000000, empPayrollDataByGenderMap.get("M"), 0.0);
 		assertEquals(2600000, empPayrollDataByGenderMap.get("F"), 0.0);
+	}
+	
+	@Test
+	public void givenEmployeeDB_WhenRetrievedMaxMin_ShouldReturnMaxByGender() throws EmployeePayrollException {
+		empPayrollDataByGenderMap = empPayRollService.getMaxOfDataGroupedByGender(IOService.DB_IO, "basic_pay");
+		assertEquals(2500000, empPayrollDataByGenderMap.get("M"), 0.0);
+		assertEquals(3000000, empPayrollDataByGenderMap.get("F"), 0.0);
+	}
+	
+	@Test
+	public void givenEmployeeDB_WhenRetrievedCount_ShouldReturnCountByGender() throws EmployeePayrollException {
+		empPayrollDataByGenderMap = empPayRollService.getCountOfDataGroupedByGender(IOService.DB_IO, "id");
+		assertEquals(2, empPayrollDataByGenderMap.get("M"), 0.0);
+		assertEquals(3, empPayrollDataByGenderMap.get("F"), 0.0);
 	}
 
 }

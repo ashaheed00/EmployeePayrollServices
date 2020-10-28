@@ -70,6 +70,22 @@ public class EmployeePayrollService {
 		else
 			throw new EmployeePayrollException("Wrong IO type", ExceptionType.WRONG_IO_TYPE);
 	}
+	
+	public Map<String, Double> getMaxOfDataGroupedByGender(IOService ioService, String column)
+			throws EmployeePayrollException {
+		if (ioService == IOService.DB_IO)
+			return employeePayrollDBService.getEmpDataGroupedByGender(column, "MAX");
+		else
+			throw new EmployeePayrollException("Wrong IO type", ExceptionType.WRONG_IO_TYPE);
+	}
+	
+	public Map<String, Double> getCountOfDataGroupedByGender(IOService ioService, String column)
+			throws EmployeePayrollException {
+		if (ioService == IOService.DB_IO)
+			return employeePayrollDBService.getEmpDataGroupedByGender(column, "COUNT");
+		else
+			throw new EmployeePayrollException("Wrong IO type", ExceptionType.WRONG_IO_TYPE);
+	}
 
 	public void updateEmployeeSalary(String name, Double salary) throws EmployeePayrollException {
 		int result = employeePayrollDBService.updateSalaryUsingSQL(name, salary);

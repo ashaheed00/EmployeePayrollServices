@@ -96,7 +96,7 @@ public class EmployeePayrollJDBCTest {
 		assertTrue(isSynced);
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void givenNewEmployee_WhenAddedInTwoTables_ShouldSyncWithDB() throws EmployeePayrollException {
 		empPayRollService.readEmployeePayrollData(IOService.DB_IO);

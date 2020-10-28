@@ -1,3 +1,3 @@
 # Employee Payroll Service BridgeLabz
-## Version JDBC UC7
-#### JDBC_UC7_AddNewEmployee 
+## Version JDBC UC8
+#### JDBC_UC8_AddPayrollWhenEmployeeAdded 

@@ -94,9 +94,9 @@ public class EmployeePayrollService {
 			throw new EmployeePayrollException("No data found", ExceptionType.NO_DATA_FOUND);
 	}
 
-	public void addEmployeePayrollData(String name, Double salary, String department, String startDate, String gender)
+	public void addEmployeePayrollData(String name, Double salary, String startDate, String gender)
 			throws EmployeePayrollException {
-		int result = employeePayrollDBService.insertNewEmployeeToDB(name, salary, department, startDate, gender);
+		int result = employeePayrollDBService.insertNewEmployeeToDB(name, salary, startDate, gender);
 		readEmployeePayrollData(IOService.DB_IO);
 		EmployeePayrollData employeePayrollData = getEmployeePayrollData(name);
 		if (result != 0 && employeePayrollData != null) {
@@ -108,6 +108,11 @@ public class EmployeePayrollService {
 			throw new EmployeePayrollException("Wrong name given", ExceptionType.WRONG_NAME);
 		if (employeePayrollData == null)
 			throw new EmployeePayrollException("No data found", ExceptionType.NO_DATA_FOUND);
+	}
+
+	public void addEmployeeAndPayrollData(String name, Double salary, String startDate, String gender)
+			throws EmployeePayrollException {
+		employeePayrollList.add(employeePayrollDBService.addNewEmployeeToDB(name, salary, startDate, gender));
 	}
 
 	public boolean isEmpPayrollSyncedWithDB(String name) throws EmployeePayrollException {

@@ -87,10 +87,20 @@ public class EmployeePayrollJDBCTest {
 		assertEquals(3, empPayrollDataByGenderMap.get("F"), 0.0);
 	}
 
+	@Ignore
 	@Test
 	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() throws EmployeePayrollException {
 		empPayRollService.readEmployeePayrollData(IOService.DB_IO);
-		empPayRollService.addEmployeePayrollData("Mark", 2000000.00, "Finance", "2016-02-01", "M");
+		empPayRollService.addEmployeePayrollData("Mark", 2000000.00, "2016-02-01", "M");
+		boolean isSynced = empPayRollService.isEmpPayrollSyncedWithDB("Mark");
+		assertTrue(isSynced);
+	}
+
+	@Ignore
+	@Test
+	public void givenNewEmployee_WhenAddedInTwoTables_ShouldSyncWithDB() throws EmployeePayrollException {
+		empPayRollService.readEmployeePayrollData(IOService.DB_IO);
+		empPayRollService.addEmployeeAndPayrollData("Mark", 2000000.00, "2016-02-01", "M");
 		boolean isSynced = empPayRollService.isEmpPayrollSyncedWithDB("Mark");
 		assertTrue(isSynced);
 	}

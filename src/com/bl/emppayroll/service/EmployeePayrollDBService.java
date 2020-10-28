@@ -134,8 +134,8 @@ public class EmployeePayrollDBService {
 		}
 	}
 
-	public EmployeePayrollData addNewEmployeeToDB(String name, Double salary, String startDate, String gender)
-			throws EmployeePayrollException {
+	public EmployeePayrollData addNewEmployeeToDB(String name, Double salary, String startDate, String gender,
+			int companyId, List<String> department) throws EmployeePayrollException {
 		EmployeePayrollData employeePayrollData = null;
 		int empId = -1;
 		Connection connection = null;
@@ -148,9 +148,28 @@ public class EmployeePayrollDBService {
 
 		try (Statement statement = connection.createStatement()) {
 			String sql = String.format(
-					"INSERT INTO employee_payroll (name, basic_pay, start_date, gender) VALUES ('%s','%s','%s','%s');",
-					name, salary, startDate, gender);
-			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+					"INSERT INTO employee_payroll (name, basic_pay, start_date, gender,company_id) VALUES ('%s','%s','%s','%s','%s');",
+					name, salary, startDate, gender,companyId);
+			int rowAffected = statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+			if (rowAffected == 1) {
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if (resultSet.next())
+					empId = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				connection.rollback();
+				return employeePayrollData;
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		try (Statement statement = connection.createStatement()) {
+			String sql = String.format("INSERT INTO departments (emp_id,department) VALUES ('%s','%s');", empId,
+					department);
+			int rowAffected = statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			if (rowAffected == 1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
 				if (resultSet.next())
@@ -176,7 +195,8 @@ public class EmployeePayrollDBService {
 					empId, salary, deductions, taxablePay, tax, netPay);
 			int rowAffected = statement.executeUpdate(sql);
 			if (rowAffected == 1) {
-				employeePayrollData = new EmployeePayrollData(empId, name, salary, Date.valueOf(startDate));
+				employeePayrollData = new EmployeePayrollData(empId, name, salary, Date.valueOf(startDate),
+						gender.charAt(0), companyId, department);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

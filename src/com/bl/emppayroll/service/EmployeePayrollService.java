@@ -110,9 +110,10 @@ public class EmployeePayrollService {
 			throw new EmployeePayrollException("No data found", ExceptionType.NO_DATA_FOUND);
 	}
 
-	public void addEmployeeAndPayrollData(String name, Double salary, String startDate, String gender)
-			throws EmployeePayrollException {
-		employeePayrollList.add(employeePayrollDBService.addNewEmployeeToDB(name, salary, startDate, gender));
+	public void addEmployeeAndPayrollData(String name, Double salary, String startDate, String gender, int companyId,
+			List<String> department) throws EmployeePayrollException {
+		employeePayrollList.add(
+				employeePayrollDBService.addNewEmployeeToDB(name, salary, startDate, gender, companyId, department));
 	}
 
 	public boolean isEmpPayrollSyncedWithDB(String name) throws EmployeePayrollException {

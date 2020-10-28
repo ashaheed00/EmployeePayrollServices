@@ -3,6 +3,7 @@ package com.bl.emppayroll;
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -96,11 +97,22 @@ public class EmployeePayrollJDBCTest {
 		assertTrue(isSynced);
 	}
 
-	//@Ignore
+	@Ignore
 	@Test
 	public void givenNewEmployee_WhenAddedInTwoTables_ShouldSyncWithDB() throws EmployeePayrollException {
 		empPayRollService.readEmployeePayrollData(IOService.DB_IO);
-		empPayRollService.addEmployeeAndPayrollData("Mark", 2000000.00, "2016-02-01", "M");
+		//empPayRollService.addEmployeeAndPayrollData("Mark", 2000000.00, "2016-02-01", "M");
+		boolean isSynced = empPayRollService.isEmpPayrollSyncedWithDB("Mark");
+		assertTrue(isSynced);
+	}
+
+	@Test
+	public void givenNewEmployee_WhenAddedUsingER_ShouldSyncWithDB() throws EmployeePayrollException {
+		empPayRollService.readEmployeePayrollData(IOService.DB_IO);
+		List<String> depts = new ArrayList<>();
+		depts.add("Sales");
+		depts.add("Marketing");
+		empPayRollService.addEmployeeAndPayrollData("Mark", 2000000.00, "2016-02-01", "M", 501, depts);
 		boolean isSynced = empPayRollService.isEmpPayrollSyncedWithDB("Mark");
 		assertTrue(isSynced);
 	}

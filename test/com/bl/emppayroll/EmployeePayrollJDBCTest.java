@@ -26,7 +26,11 @@ public class EmployeePayrollJDBCTest {
 
 	@Test
 	public void givenNewSalary_WhenUpdated_ShouldSyncWithDB() {
-		empPayRollService.updateEmployeeSalary("Terisa", 3000000.0);
+		try {
+			empPayRollService.updateEmployeeSalary("Terisa", 3000000.0);
+		} catch (EmployeePayrollException e) {
+			System.err.println(e.getMessage());
+		}
 		boolean isSynced = empPayRollService.isEmpPayrollSyncedWithDB("Terisa");
 		assertTrue(isSynced);
 	}

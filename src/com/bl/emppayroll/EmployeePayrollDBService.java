@@ -3,6 +3,8 @@ package com.bl.emppayroll;
 import java.sql.*;
 import java.util.*;
 
+import com.bl.emppayroll.EmployeePayrollException.ExceptionType;
+
 public class EmployeePayrollDBService {
 
 	private PreparedStatement empPreparedStatement;
@@ -29,10 +31,7 @@ public class EmployeePayrollDBService {
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		try (Statement statement = getConnection().createStatement();) {
 			ResultSet resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				employeePayrollList.add(new EmployeePayrollData(resultSet.getInt("id"), resultSet.getString("name"),
-						resultSet.getDouble("basic_pay"), resultSet.getDate("start_date")));
-			}
+			employeePayrollList = getEmployeePayrollList(resultSet);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -46,14 +45,23 @@ public class EmployeePayrollDBService {
 		try {
 			empPreparedStatement.setString(1, name);
 			ResultSet resultSet = empPreparedStatement.executeQuery();
-			while (resultSet.next()) {
-				employeePayrollList.add(new EmployeePayrollData(resultSet.getInt("id"), resultSet.getString("name"),
-						resultSet.getDouble("basic_pay"), resultSet.getDate("start_date")));
-			}
+			employeePayrollList = getEmployeePayrollList(resultSet);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return employeePayrollList;
+	}
+
+	public int updateSalaryUsingSQL(String name, Double salary) throws EmployeePayrollException {
+		String sql = "UPDATE employee_payroll SET basic_pay = ?  WHERE name = ? ";
+		try (Connection connection = getConnection()) {
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setDouble(1, salary);
+			preparedStatement.setString(2, name);
+			return preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new EmployeePayrollException("Wrong SQL query given", ExceptionType.WRONG_SQL);
+		}
 	}
 
 	private void prepareStatementForEmployeeData() {
@@ -66,20 +74,16 @@ public class EmployeePayrollDBService {
 		}
 	}
 
-	public int updateSalary(String name, Double salary) {
-		return 0;
-	}
-
-	public int updateSalaryUsingSQL(String name, Double salary) {
-		String sql = "UPDATE employee_payroll SET basic_pay = ? WHERE name = ? ";
-		try (Connection connection = getConnection()) {
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setDouble(1, salary);
-			preparedStatement.setString(2, name);
-			return preparedStatement.executeUpdate();
-		} catch (Exception e) {
+	private List<EmployeePayrollData> getEmployeePayrollList(ResultSet resultSet) {
+		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				employeePayrollList.add(new EmployeePayrollData(resultSet.getInt("id"), resultSet.getString("name"),
+						resultSet.getDouble("basic_pay"), resultSet.getDate("start_date")));
+			}
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return employeePayrollList;
 	}
 }

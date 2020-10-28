@@ -2,6 +2,8 @@ package com.bl.emppayroll;
 
 import java.util.*;
 
+import com.bl.emppayroll.EmployeePayrollException.ExceptionType;
+
 public class EmployeePayrollService {
 
 	public enum IOService {
@@ -42,11 +44,15 @@ public class EmployeePayrollService {
 		return employeePayrollList;
 	}
 
-	public void updateEmployeeSalary(String name, Double salary) {
+	public void updateEmployeeSalary(String name, Double salary) throws EmployeePayrollException {
 		int result = employeePayrollDBService.updateSalaryUsingSQL(name, salary);
 		EmployeePayrollData employeePayrollData = getEmployeePayrollData(name);
 		if (result != 0 && employeePayrollData != null)
 			employeePayrollData.setSalary(salary);
+		if (result == 0)
+			throw new EmployeePayrollException("Wrong name given", ExceptionType.WRONG_NAME);
+		if (employeePayrollData == null)
+			throw new EmployeePayrollException("No data found", ExceptionType.NO_DATA_FOUND);
 	}
 
 	public boolean isEmpPayrollSyncedWithDB(String name) {

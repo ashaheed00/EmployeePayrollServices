@@ -1,3 +1,3 @@
 # Employee Payroll Service BridgeLabz
-## Version JDBC UC6
-#### JDBC_UC6_Retrieve_SumAvgCount 
+## Version JDBC UC7
+#### JDBC_UC7_AddNewEmployee 

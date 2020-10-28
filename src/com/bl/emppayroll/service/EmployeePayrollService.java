@@ -1,9 +1,5 @@
 package com.bl.emppayroll.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import com.bl.emppayroll.EmployeePayrollData;
@@ -62,7 +58,7 @@ public class EmployeePayrollService {
 		else
 			throw new EmployeePayrollException("Wrong IO type", ExceptionType.WRONG_IO_TYPE);
 	}
-	
+
 	public Map<String, Double> getAvgOfDataGroupedByGender(IOService ioService, String column)
 			throws EmployeePayrollException {
 		if (ioService == IOService.DB_IO)
@@ -70,7 +66,7 @@ public class EmployeePayrollService {
 		else
 			throw new EmployeePayrollException("Wrong IO type", ExceptionType.WRONG_IO_TYPE);
 	}
-	
+
 	public Map<String, Double> getMaxOfDataGroupedByGender(IOService ioService, String column)
 			throws EmployeePayrollException {
 		if (ioService == IOService.DB_IO)
@@ -78,7 +74,7 @@ public class EmployeePayrollService {
 		else
 			throw new EmployeePayrollException("Wrong IO type", ExceptionType.WRONG_IO_TYPE);
 	}
-	
+
 	public Map<String, Double> getCountOfDataGroupedByGender(IOService ioService, String column)
 			throws EmployeePayrollException {
 		if (ioService == IOService.DB_IO)
@@ -92,6 +88,22 @@ public class EmployeePayrollService {
 		EmployeePayrollData employeePayrollData = getEmployeePayrollData(name);
 		if (result != 0 && employeePayrollData != null)
 			employeePayrollData.setSalary(salary);
+		if (result == 0)
+			throw new EmployeePayrollException("Wrong name given", ExceptionType.WRONG_NAME);
+		if (employeePayrollData == null)
+			throw new EmployeePayrollException("No data found", ExceptionType.NO_DATA_FOUND);
+	}
+
+	public void addEmployeePayrollData(String name, Double salary, String department, String startDate, String gender)
+			throws EmployeePayrollException {
+		int result = employeePayrollDBService.insertNewEmployeeToDB(name, salary, department, startDate, gender);
+		readEmployeePayrollData(IOService.DB_IO);
+		EmployeePayrollData employeePayrollData = getEmployeePayrollData(name);
+		if (result != 0 && employeePayrollData != null) {
+			employeePayrollData.setName(name);
+			employeePayrollData.setStartDate(LocalDate.parse(startDate));
+			employeePayrollData.setSalary(salary);
+		}
 		if (result == 0)
 			throw new EmployeePayrollException("Wrong name given", ExceptionType.WRONG_NAME);
 		if (employeePayrollData == null)

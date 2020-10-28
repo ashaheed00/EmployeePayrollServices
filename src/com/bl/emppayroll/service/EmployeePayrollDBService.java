@@ -120,4 +120,17 @@ public class EmployeePayrollDBService {
 		}
 		return dataByGenderMap;
 	}
+
+	public int insertNewEmployeeToDB(String name, Double salary, String department, String startDate, String gender)
+			throws EmployeePayrollException {
+		String sql = String.format(
+				"INSERT INTO employee_payroll (name, basic_pay, department, start_date, gender,deductions,taxable_pay,tax,net_pay) VALUES ('%s','%s','%s','%s','%s',0,0,0,0);",
+				name, salary, department, startDate, gender);
+		try (Connection connection = getConnection()) {
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			return preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new EmployeePayrollException("Wrong SQL or field given", ExceptionType.WRONG_SQL);
+		}
+	}
 }

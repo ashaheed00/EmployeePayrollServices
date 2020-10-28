@@ -7,7 +7,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bl.emppayroll.EmployeePayrollService.IOService;
+import com.bl.emppayroll.exception.EmployeePayrollException;
+import com.bl.emppayroll.service.EmployeePayrollService;
+import com.bl.emppayroll.service.EmployeePayrollService.IOService;
 
 public class EmployeePayrollJDBCTest {
 	EmployeePayrollService empPayRollService;

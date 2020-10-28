@@ -1,4 +1,4 @@
-package com.bl.emppayroll;
+package com.bl.emppayroll.exception;
 
 public class EmployeePayrollException extends Exception {
 	public enum ExceptionType {

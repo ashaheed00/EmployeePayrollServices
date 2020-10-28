@@ -1,13 +1,14 @@
 package com.bl.emppayroll;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class EmployeePayrollData {
 
 	private int id;
 	private String name;
 	private double salary;
-	private Date startDate;
+	private LocalDate startDate;
 
 	public EmployeePayrollData() {
 	}
@@ -20,7 +21,7 @@ public class EmployeePayrollData {
 
 	public EmployeePayrollData(int id, String name, double salary, Date date) {
 		this(id, name, salary);
-		this.startDate = date;
+		this.startDate = date.toLocalDate();
 	}
 
 	public int getId() {
@@ -73,11 +74,11 @@ public class EmployeePayrollData {
 		this.salary = salary;
 	}
 
-	public Date getStartDate() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
 

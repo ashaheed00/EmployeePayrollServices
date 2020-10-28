@@ -1,6 +1,8 @@
 package com.bl.emppayroll.service;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.sql.Date;
 import java.util.*;
 
 import com.bl.emppayroll.EmployeePayrollData;
@@ -29,15 +31,8 @@ public class EmployeePayrollDBService {
 	}
 
 	public List<EmployeePayrollData> readData() {
-		String sql = "select * from employee_payroll";
-		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
-		try (Statement statement = getConnection().createStatement();) {
-			ResultSet resultSet = statement.executeQuery(sql);
-			employeePayrollList = getEmployeePayrollList(resultSet);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return employeePayrollList;
+		String sql = String.format("select * from employee_payroll");
+		return getEmployeePayrollList(sql);
 	}
 
 	public List<EmployeePayrollData> getEmployeePayrollDatas(String name) {
@@ -52,6 +47,13 @@ public class EmployeePayrollDBService {
 			e.printStackTrace();
 		}
 		return employeePayrollList;
+	}
+
+	public List<EmployeePayrollData> getEmployeesForDateRange(LocalDate startDate, LocalDate endDate)
+			throws EmployeePayrollException {
+		String sql = String.format("SELECT * FROM employee_payroll WHERE start_date BETWEEN '%s' AND '%s';",
+				Date.valueOf(startDate), Date.valueOf(endDate));
+		return getEmployeePayrollList(sql);
 	}
 
 	public int updateSalaryUsingSQL(String name, Double salary) throws EmployeePayrollException {
@@ -79,6 +81,21 @@ public class EmployeePayrollDBService {
 	private List<EmployeePayrollData> getEmployeePayrollList(ResultSet resultSet) {
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		try {
+			while (resultSet.next()) {
+				employeePayrollList.add(new EmployeePayrollData(resultSet.getInt("id"), resultSet.getString("name"),
+						resultSet.getDouble("basic_pay"), resultSet.getDate("start_date")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return employeePayrollList;
+	}
+
+	private List<EmployeePayrollData> getEmployeePayrollList(String sql) {
+		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+		try (Connection connection = getConnection()) {
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				employeePayrollList.add(new EmployeePayrollData(resultSet.getInt("id"), resultSet.getString("name"),
 						resultSet.getDouble("basic_pay"), resultSet.getDate("start_date")));

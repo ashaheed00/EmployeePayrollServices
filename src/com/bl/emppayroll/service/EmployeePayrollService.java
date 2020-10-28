@@ -1,7 +1,7 @@
 package com.bl.emppayroll.service;
 
+import java.time.LocalDate;
 import java.util.*;
-
 import com.bl.emppayroll.EmployeePayrollData;
 import com.bl.emppayroll.exception.EmployeePayrollException;
 import com.bl.emppayroll.exception.EmployeePayrollException.ExceptionType;
@@ -46,6 +46,11 @@ public class EmployeePayrollService {
 		return employeePayrollList;
 	}
 
+	public List<EmployeePayrollData> getEmpPayrollDataForDateRange(LocalDate startDate, LocalDate endDate)
+			throws EmployeePayrollException {
+		return employeePayrollDBService.getEmployeesForDateRange(startDate, endDate);
+	}
+
 	public void updateEmployeeSalary(String name, Double salary) throws EmployeePayrollException {
 		int result = employeePayrollDBService.updateSalaryUsingSQL(name, salary);
 		EmployeePayrollData employeePayrollData = getEmployeePayrollData(name);
@@ -57,12 +62,12 @@ public class EmployeePayrollService {
 			throw new EmployeePayrollException("No data found", ExceptionType.NO_DATA_FOUND);
 	}
 
-	public boolean isEmpPayrollSyncedWithDB(String name) {
+	public boolean isEmpPayrollSyncedWithDB(String name) throws EmployeePayrollException {
 		try {
 			return employeePayrollDBService.getEmployeePayrollDatas(name).get(0).equals(getEmployeePayrollData(name));
 		} catch (IndexOutOfBoundsException e) {
+			throw new EmployeePayrollException("No data found with that name", ExceptionType.NO_DATA_FOUND);
 		}
-		return false;
 	}
 
 	private EmployeePayrollData getEmployeePayrollData(String name) {

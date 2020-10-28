@@ -2,6 +2,7 @@ package com.bl.emppayroll;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.Before;
@@ -33,8 +34,21 @@ public class EmployeePayrollJDBCTest {
 		} catch (EmployeePayrollException e) {
 			System.err.println(e.getMessage());
 		}
-		boolean isSynced = empPayRollService.isEmpPayrollSyncedWithDB("Terisa");
+		boolean isSynced = false;
+		try {
+			isSynced = empPayRollService.isEmpPayrollSyncedWithDB("Terisa");
+		} catch (EmployeePayrollException e) {
+			System.out.println(e.getMessage());
+		}
 		assertTrue(isSynced);
+	}
+
+	@Test
+	public void givenDateRange_WhenRetrievedEmployee_ShouldReturnEmpCount() throws EmployeePayrollException {
+		LocalDate startDate = LocalDate.of(2018, 01, 01);
+		LocalDate enDate = LocalDate.now();
+		empPayrollList = empPayRollService.getEmpPayrollDataForDateRange(startDate, enDate);
+		assertEquals(4, empPayrollList.size());
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.bl.emppayroll.service;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 import com.bl.emppayroll.EmployeePayrollData;
@@ -94,7 +95,6 @@ public class EmployeePayrollService {
 			throw new EmployeePayrollException("No data found", ExceptionType.NO_DATA_FOUND);
 	}
 
-	@Deprecated
 	public void addEmployeePayrollData(String name, Double salary, String startDate, String gender)
 			throws EmployeePayrollException {
 		int result = employeePayrollDBService.insertNewEmployeeToDB(name, salary, startDate, gender);
@@ -137,5 +137,14 @@ public class EmployeePayrollService {
 
 	private EmployeePayrollData getEmployeePayrollData(String name) {
 		return employeePayrollList.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
+	}
+
+	public void addEmployeeAndPayrollData(EmployeePayrollData[] employeePayrollDataArray)
+			throws EmployeePayrollException {
+		for (EmployeePayrollData emp : employeePayrollDataArray) {
+			System.out.println(emp.getName() + " is being added to DB");
+			addEmployeePayrollData(emp.getName(), emp.getSalary(), emp.getStartDate().toString(), emp.getGender());
+			System.out.println("Employee added: " + emp.getName());
+		}
 	}
 }

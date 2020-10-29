@@ -1,3 +1,3 @@
 # Employee Payroll Service BridgeLabz
-## Version JDBC UC12
-#### JDBC_UC12_RemoveEmployee_IntroduceIsActive 
+## Version MultiThreading UC1
+#### MultiThreading_UC1_GetDuration 

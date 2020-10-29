@@ -2,8 +2,12 @@ package com.bl.emppayroll;
 
 import static org.junit.Assert.*;
 
+import java.sql.Date;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +18,7 @@ import org.junit.Test;
 import com.bl.emppayroll.exception.EmployeePayrollException;
 import com.bl.emppayroll.service.EmployeePayrollService;
 import com.bl.emppayroll.service.EmployeePayrollService.IOService;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 public class EmployeePayrollJDBCTest {
 	EmployeePayrollService empPayRollService;
@@ -48,6 +53,7 @@ public class EmployeePayrollJDBCTest {
 		assertTrue(isSynced);
 	}
 
+	@Ignore
 	@Test
 	public void givenDateRange_WhenRetrievedEmployee_ShouldReturnEmpCount() throws EmployeePayrollException {
 		LocalDate startDate = LocalDate.of(2018, 01, 01);
@@ -119,10 +125,27 @@ public class EmployeePayrollJDBCTest {
 		assertTrue(isSynced);
 	}
 
+	@Ignore
 	@Test
 	public void givenEmployeeId_WhenDeletedUsing_ShouldSyncWithDB() throws EmployeePayrollException {
 		empPayRollService.removeEmployee(5);
 		assertEquals(5, empPayrollList.size());
+	}
+
+	@Test
+	public void given4Employees_WhenAdded_ShouldMatchEmpEntries() throws EmployeePayrollException {
+		EmployeePayrollData[] employeePayrollDataArray = {
+				new EmployeePayrollData(0, "Kalyan", 1000000, Date.valueOf(LocalDate.now()), "M", 501),
+				new EmployeePayrollData(0, "Rashmi", 1000000, Date.valueOf(LocalDate.now()), "F", 501),
+				new EmployeePayrollData(0, "Sharad", 2000000, Date.valueOf(LocalDate.now()), "M", 501),
+				new EmployeePayrollData(0, "Nancy", 1500000, Date.valueOf(LocalDate.now()), "F", 501) };
+
+		empPayRollService.readEmployeePayrollData(IOService.DB_IO);
+		Instant start = Instant.now();
+		empPayRollService.addEmployeeAndPayrollData(employeePayrollDataArray);
+		Instant end = Instant.now();
+		System.out.println("Duration without Thread: " + Duration.between(start, end).toMillis() + " ms");
+		assertEquals(9, empPayRollService.readEmployeePayrollData(IOService.DB_IO).size());
 	}
 
 }

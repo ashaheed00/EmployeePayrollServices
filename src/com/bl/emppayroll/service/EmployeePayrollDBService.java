@@ -130,6 +130,7 @@ public class EmployeePayrollDBService {
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			return preparedStatement.executeUpdate();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new EmployeePayrollException("Wrong SQL or field given", ExceptionType.WRONG_SQL);
 		}
 	}
@@ -195,8 +196,8 @@ public class EmployeePayrollDBService {
 					empId, salary, deductions, taxablePay, tax, netPay);
 			int rowAffected = statement.executeUpdate(sql);
 			if (rowAffected == 1) {
-				employeePayrollData = new EmployeePayrollData(empId, name, salary, Date.valueOf(startDate),
-						gender.charAt(0), companyId, department);
+				employeePayrollData = new EmployeePayrollData(empId, name, salary, Date.valueOf(startDate), gender,
+						companyId, department);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

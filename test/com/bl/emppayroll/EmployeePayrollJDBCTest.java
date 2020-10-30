@@ -142,10 +142,26 @@ public class EmployeePayrollJDBCTest {
 
 		empPayRollService.readEmployeePayrollData(IOService.DB_IO);
 		Instant start = Instant.now();
-		empPayRollService.addEmployeeAndPayrollData(employeePayrollDataArray);
+		empPayRollService.addEmployeePayrollData(employeePayrollDataArray);
 		Instant end = Instant.now();
-		System.out.println("Duration without Thread: " + Duration.between(start, end).toMillis() + " ms");
+		System.err.println("Duration without Thread: " + Duration.between(start, end).toMillis() + " ms");
 		assertEquals(9, empPayRollService.readEmployeePayrollData(IOService.DB_IO).size());
+	}
+
+	@Test
+	public void given4Employees_WhenAddedUsingThreads_ShouldMatchEmpEntries() throws EmployeePayrollException {
+		EmployeePayrollData[] employeePayrollDataArray = {
+				new EmployeePayrollData(0, "Kalyan", 1000000, Date.valueOf(LocalDate.now()), "M", 501),
+				new EmployeePayrollData(0, "Rashmi", 1000000, Date.valueOf(LocalDate.now()), "F", 501),
+				new EmployeePayrollData(0, "Sharad", 2000000, Date.valueOf(LocalDate.now()), "M", 501),
+				new EmployeePayrollData(0, "Nancy", 1500000, Date.valueOf(LocalDate.now()), "F", 501) };
+
+		empPayRollService.readEmployeePayrollData(IOService.DB_IO);
+		Instant start = Instant.now();
+		empPayRollService.addEmployeePayrollDataWithThreads(employeePayrollDataArray);
+		Instant end = Instant.now();
+		System.err.println("Duration with Thread: " + Duration.between(start, end).toMillis() + " ms");
+		assertEquals(13, empPayRollService.readEmployeePayrollData(IOService.DB_IO).size());
 	}
 
 }

@@ -139,12 +139,30 @@ public class EmployeePayrollService {
 		return employeePayrollList.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
 	}
 
-	public void addEmployeeAndPayrollData(EmployeePayrollData[] employeePayrollDataArray)
-			throws EmployeePayrollException {
+	public void addEmployeePayrollData(EmployeePayrollData[] employeePayrollDataArray) throws EmployeePayrollException {
 		for (EmployeePayrollData emp : employeePayrollDataArray) {
-			System.out.println(emp.getName() + " is being added to DB");
 			addEmployeePayrollData(emp.getName(), emp.getSalary(), emp.getStartDate().toString(), emp.getGender());
-			System.out.println("Employee added: " + emp.getName());
+		}
+	}
+
+	public void addEmployeePayrollDataWithThreads(EmployeePayrollData[] employeePayrollDataArray)
+			throws EmployeePayrollException {
+		Map<Integer, Boolean> status = new HashMap<>();
+
+		for (EmployeePayrollData emp : employeePayrollDataArray) {
+			Runnable task = () -> {
+				//System.out.println(emp.getName() + " is being added to DB");
+				try {
+					addEmployeePayrollData(emp.getName(), emp.getSalary(), emp.getStartDate().toString(),
+							emp.getGender());
+				} catch (EmployeePayrollException e) {
+					e.printStackTrace();
+				}
+				status.put(emp.hashCode(), true);
+				//System.out.println("Employee added: " + emp.getName());
+			};
+			Thread thread = new Thread(task, emp.getName());
+			thread.start();
 		}
 	}
 }

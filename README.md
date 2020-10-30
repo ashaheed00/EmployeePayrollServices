@@ -1,3 +1,3 @@
 # Employee Payroll Service BridgeLabz
-## Version MultiThreading UC1
-#### MultiThreading_UC1_GetDuration 
+## Version MultiThreading UC2
+#### MultiThreading_UC1_UseMultiThreads

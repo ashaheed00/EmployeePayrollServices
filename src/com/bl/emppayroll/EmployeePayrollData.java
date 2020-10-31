@@ -2,6 +2,7 @@ package com.bl.emppayroll;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeePayrollData {
@@ -12,7 +13,7 @@ public class EmployeePayrollData {
 	private LocalDate startDate;
 	private String gender;
 	private int companyId;
-	private List<String> departmentName;
+	private ArrayList<String> departmentName;
 
 	public EmployeePayrollData() {
 	}
@@ -35,7 +36,7 @@ public class EmployeePayrollData {
 	}
 
 	public EmployeePayrollData(int id, String name, double salary, Date startDate, String gender, int companyId,
-			List<String> departmentName) {
+			ArrayList<String> departmentName) {
 		this(id, name, salary, startDate);
 		this.gender = gender;
 		this.companyId = companyId;
@@ -90,11 +91,11 @@ public class EmployeePayrollData {
 		this.companyId = companyId;
 	}
 
-	public List<String> getDepartmentName() {
+	public ArrayList<String> getDepartmentName() {
 		return departmentName;
 	}
 
-	public void setDepartmentName(List<String> departmentName) {
+	public void setDepartmentName(ArrayList<String> departmentName) {
 		this.departmentName = departmentName;
 	}
 

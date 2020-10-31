@@ -150,7 +150,7 @@ public class EmployeePayrollDBService {
 	}
 
 	public EmployeePayrollData addNewEmployeeToDB(String name, Double salary, String startDate, String gender,
-			int companyId, List<String> department) throws EmployeePayrollException {
+			int companyId, ArrayList<String> department) throws EmployeePayrollException {
 		EmployeePayrollData employeePayrollData = null;
 		int empId = -1;
 		Connection connection = null;

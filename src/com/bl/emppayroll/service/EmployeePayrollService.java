@@ -95,8 +95,8 @@ public class EmployeePayrollService {
 			throw new EmployeePayrollException("No data found", ExceptionType.NO_DATA_FOUND);
 	}
 
-	public synchronized void addEmployeePayrollData(String name, Double salary, String startDate,
-			String gender)			throws EmployeePayrollException {
+	public synchronized void addEmployeePayrollData(String name, Double salary, String startDate, String gender)
+			throws EmployeePayrollException {
 		int result = employeePayrollDBService.insertNewEmployeeToDB(name, salary, startDate, gender);
 		readEmployeePayrollData(IOService.DB_IO);
 		EmployeePayrollData employeePayrollData = getEmployeePayrollData(name);
@@ -112,7 +112,7 @@ public class EmployeePayrollService {
 	}
 
 	public void addEmployeeAndPayrollData(String name, Double salary, String startDate, String gender, int companyId,
-			List<String> department) throws EmployeePayrollException {
+			ArrayList<String> department) throws EmployeePayrollException {
 		employeePayrollList.add(
 				employeePayrollDBService.addNewEmployeeToDB(name, salary, startDate, gender, companyId, department));
 	}
@@ -158,8 +158,8 @@ public class EmployeePayrollService {
 			Runnable task = () -> {
 				System.out.println(Thread.currentThread().getName() + " is being added to DB");
 				try {
-					addEmployeePayrollData(emp.getName(), emp.getSalary(), emp.getStartDate().toString(),
-							emp.getGender());
+					addEmployeeAndPayrollData(emp.getName(), emp.getSalary(), emp.getStartDate().toString(),
+							emp.getGender(), emp.getCompanyId(), emp.getDepartmentName());
 					System.out.println("Employee added: " + Thread.currentThread().getName());
 					status.put(emp.hashCode(), true);
 				} catch (EmployeePayrollException e) {

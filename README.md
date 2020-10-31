@@ -1,3 +1,3 @@
 # Employee Payroll Service BridgeLabz
-## Version MultiThreading UC5
-#### MultiThreading_UC5_EmpAndPayrollDeptsAdded
+## Version MultiThreading UC6
+#### MultiThreading_UC6_UpdateSalaryOfMultipleEmp

@@ -13,6 +13,7 @@ public class EmployeePayrollDBService {
 
 	private PreparedStatement empPreparedStatement;
 	private static EmployeePayrollDBService employeePayrollDBService;
+	private int connectionCounter;
 
 	private EmployeePayrollDBService() {
 	}
@@ -23,11 +24,18 @@ public class EmployeePayrollDBService {
 		return employeePayrollDBService;
 	}
 
-	private Connection getConnection() throws SQLException {
+	private synchronized Connection getConnection() throws SQLException {
 		String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
 		String userName = "root";
 		String password = "my964sql!!";
-		return DriverManager.getConnection(jdbcURL, userName, password);
+		Connection connection;
+		connectionCounter++;
+		System.out
+				.println("Proccessing Thraed: " + Thread.currentThread().getName() + " with ID: " + connectionCounter);
+		connection = DriverManager.getConnection(jdbcURL, userName, password);
+		System.out.println("Proccessing Thraed: " + Thread.currentThread().getName() + " with ID: " + connectionCounter
+				+ " is successful!");
+		return connection;
 	}
 
 	public List<EmployeePayrollData> readData() {
@@ -126,12 +134,18 @@ public class EmployeePayrollDBService {
 		String sql = String.format(
 				"INSERT INTO employee_payroll (name, basic_pay, start_date, gender) VALUES ('%s','%s','%s','%s');",
 				name, salary, startDate, gender);
+
 		try (Connection connection = getConnection()) {
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			return preparedStatement.executeUpdate();
+			empPreparedStatement = connection.prepareStatement(sql);
+			return empPreparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new EmployeePayrollException("Wrong SQL or field given", ExceptionType.WRONG_SQL);
+		} finally {
+			try {
+				empPreparedStatement.close();
+			} catch (SQLException e) {
+			}
 		}
 	}
 

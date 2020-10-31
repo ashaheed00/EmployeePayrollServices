@@ -95,8 +95,8 @@ public class EmployeePayrollService {
 			throw new EmployeePayrollException("No data found", ExceptionType.NO_DATA_FOUND);
 	}
 
-	public void addEmployeePayrollData(String name, Double salary, String startDate, String gender)
-			throws EmployeePayrollException {
+	public synchronized void addEmployeePayrollData(String name, Double salary, String startDate,
+			String gender)			throws EmployeePayrollException {
 		int result = employeePayrollDBService.insertNewEmployeeToDB(name, salary, startDate, gender);
 		readEmployeePayrollData(IOService.DB_IO);
 		EmployeePayrollData employeePayrollData = getEmployeePayrollData(name);
@@ -139,30 +139,42 @@ public class EmployeePayrollService {
 		return employeePayrollList.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
 	}
 
-	public void addEmployeePayrollData(EmployeePayrollData[] employeePayrollDataArray) throws EmployeePayrollException {
-		for (EmployeePayrollData emp : employeePayrollDataArray) {
-			addEmployeePayrollData(emp.getName(), emp.getSalary(), emp.getStartDate().toString(), emp.getGender());
-		}
+	public void addEmployeePayrollData(List<EmployeePayrollData> employeePayrollDataList)
+			throws EmployeePayrollException {
+		employeePayrollDataList.forEach(emp -> {
+			try {
+				addEmployeePayrollData(emp.getName(), emp.getSalary(), emp.getStartDate().toString(), emp.getGender());
+			} catch (EmployeePayrollException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
-	public void addEmployeePayrollDataWithThreads(EmployeePayrollData[] employeePayrollDataArray)
+	public void addEmployeePayrollDataWithThreads(List<EmployeePayrollData> employeePayrollDataList)
 			throws EmployeePayrollException {
 		Map<Integer, Boolean> status = new HashMap<>();
-
-		for (EmployeePayrollData emp : employeePayrollDataArray) {
+		employeePayrollDataList.forEach(emp -> {
+			status.put(emp.hashCode(), false);
 			Runnable task = () -> {
-				//System.out.println(emp.getName() + " is being added to DB");
+				System.out.println(Thread.currentThread().getName() + " is being added to DB");
 				try {
 					addEmployeePayrollData(emp.getName(), emp.getSalary(), emp.getStartDate().toString(),
 							emp.getGender());
+					System.out.println("Employee added: " + Thread.currentThread().getName());
+					status.put(emp.hashCode(), true);
 				} catch (EmployeePayrollException e) {
 					e.printStackTrace();
 				}
-				status.put(emp.hashCode(), true);
-				//System.out.println("Employee added: " + emp.getName());
 			};
 			Thread thread = new Thread(task, emp.getName());
 			thread.start();
-		}
+		});
+
+		while (status.containsValue(false))
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 	}
 }

@@ -1,3 +1,3 @@
 # Employee Payroll Service BridgeLabz
-## Version MultiThreading UC3
-#### MultiThreading_UC3_MaintainSynchronization
+## Version MultiThreading UC4
+#### MultiThreading_UC4_UseConsoleLogsToUnderstandThreading
